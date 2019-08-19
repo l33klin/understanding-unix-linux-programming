@@ -97,12 +97,19 @@ int see_more(FILE* cmd) {
   int c;
   printf("\033[7m more? \033[m");
   while ((c = getc(cmd)) != EOF) {
+    short ret = -1;
     if (c == 'q')
-      return 0;
-    if (c == ' ')
-      return PAGELEN;
-    if (c == '\n')
-      return 1;
+      ret = 0;
+    if (c == ' ') {
+      ret = PAGELEN;
+    }
+    if (c == '\n') {
+      ret = 1;
+    }
+    if (ret != -1) {
+      printf("%c[2K", 27);
+      return ret;
+    }
   }
   return 0;
 }
