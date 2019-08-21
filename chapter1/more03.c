@@ -5,6 +5,8 @@
  * Problem solved:
  * 1. Read char from stdin without press enter, more detail: https://stackoverflow.com/questions/1798511/how-to-avoid-pressing-enter-with-getchar
  * 2. Get terminal size for show self-adaptive, more detail: https://stackoverflow.com/questions/1022957/getting-terminal-width-in-c
+ * 3. Erase prompt line: https://stackoverflow.com/questions/1508490/erase-the-current-printed-console-line
+ * 4. Not echo user input: https://stackoverflow.com/questions/24830407/get-a-string-without-displaying-it-on-the-console
  */
 
 #include <sys/ioctl.h>  //ioctl
@@ -37,11 +39,13 @@ int main(int ac, char *av[]) {
 
   /*ICANON normally takes care that one line at a time will be processed
   that means it will return if it sees a "\n" or an EOF or an EOL*/
-  newt.c_lflag &= ~(ICANON);
+  newt.c_lflag &= ~(ICANON|ECHO);
 
   /*Those new settings will be set to STDIN
   TCSANOW tells tcsetattr to change attributes immediately. */
   tcsetattr( STDIN_FILENO, TCSANOW, &newt);
+
+//  curs_set(0);
 
   /* This is your part */
   FILE* fp;
