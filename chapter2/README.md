@@ -2,6 +2,10 @@
 
 ## who
 - <utmp.h> 已经被启用，utmpx.h暂时没有找到完整的说明文档，先跳过who命令这一部分
+- 2019-09-05 凌晨发现新大陆，原来关于utmpx.h说明文档藏在这里，哈哈，搞一波：
+```bash
+$ man 3 pututxline
+```
 
 ## cp test result
 
