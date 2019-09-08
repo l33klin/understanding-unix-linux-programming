@@ -3,7 +3,7 @@
  * action if no args, use . else list files args
  * note: users stat and pwd.h and grp.h
  * BUG: try ls2 /tmp
- * Update: 1. Fix absolute path error
+ * Update: 1. Fix absolute path error: https://stackoverflow.com/questions/2153715/concatenating-file-with-path-to-get-full-path-in-c
  */
 
 #include <stdio.h>
