@@ -3,6 +3,7 @@
  * action if no args, use . else list files args
  * note: users stat and pwd.h and grp.h
  * BUG: try ls2 /tmp
+ * Update: 1. Fix absolute path error: https://stackoverflow.com/questions/2153715/concatenating-file-with-path-to-get-full-path-in-c
  */
 
 #include <stdio.h>
@@ -16,6 +17,7 @@
 
 #define MAXLEN 1000
 #define MAXNAMELEN 1000
+#define MAXDIRLEN 1000
 
 enum FILENAME {A,B}; // specify the file
 
@@ -31,6 +33,7 @@ char * gid_to_name(gid_t);
 struct dirent *sorted_file_set[MAXLEN];
 char filenamea[MAXNAMELEN]; // unified filename
 char filenameb[MAXNAMELEN];
+char * currentdir;
 
 int main(int argc, char *argv[]) {
   if (argc == 1) {
@@ -50,6 +53,11 @@ void do_ls(char dirname[]) {
   DIR *dir_ptr;
   struct dirent *direntp;
   int index = 0;
+//  unsigned dir_len = strlen(dirname);
+  if (strlen(dirname) > MAXDIRLEN) {
+    perror("dir is too long");
+  }
+  currentdir = dirname;
 
   if ((dir_ptr = opendir(dirname)) == NULL) {
     fprintf(stderr, "ls2: cannot open %s \n", dirname);
@@ -63,7 +71,9 @@ void do_ls(char dirname[]) {
 
     // display the info about sorted filename
     for (int i = 0; i < index; ++i) {
+
       do_stat(sorted_file_set[i]->d_name);
+//      free(fullpath);
     }
 
     closedir(dir_ptr);
@@ -72,11 +82,17 @@ void do_ls(char dirname[]) {
 
 void do_stat(char *filename) {
   struct stat info;
-  if (stat(filename, &info) == -1) {
+  char *fullpath = malloc(strlen(currentdir) + strlen(filename) + 2);
+  if (fullpath == NULL) {
+    perror("malloc error");
+  }
+  sprintf(fullpath, "%s/%s", currentdir, filename);
+  if (stat(fullpath, &info) == -1) {
     perror(filename);
   } else {
     show_file_info(filename, &info);
   }
+  free(fullpath);
 }
 
 /**
