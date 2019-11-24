@@ -25,7 +25,8 @@ int main() {
     addstr(message);
     move(LINES-1, COLS-1);
     refresh();
-    sleep(1);
+//    sleep(1);
+    usleep(50000);
     move(ROW, pos);
     addstr(blank);
     pos += dir;
