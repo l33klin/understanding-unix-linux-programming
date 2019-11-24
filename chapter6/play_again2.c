@@ -16,7 +16,7 @@
 int main() {
     int response;
     tty_mode(0);                        /* save tty mode */
-    set_cr_noecho_mode();                       /* set chr-by-chr mode */
+    set_cr_noecho_mode();               /* set chr-by-chr mode */
     response = get_response(QUESTION);  /* get some answer */
     tty_mode(1);                        /* restore tty mode */
     return response;
