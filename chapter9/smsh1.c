@@ -2,6 +2,7 @@
  * first really useful version after prompting shell
  * this one parses the command line into strings
  * uses fork, exec, wait, and ignores signals
+ * build: gcc smsh1.c splitline.c execute.c -o smsh1.o
  */
 
 #include <stdio.h>
