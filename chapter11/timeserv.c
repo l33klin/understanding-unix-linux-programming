@@ -14,6 +14,9 @@
 #define   HOSTLEN  256
 #define   oops(msg)      { perror(msg); exit(1); }
 
+
+void print_ip(struct sockaddr *);
+
 int main(int ac, char *av[])
 {
     struct  sockaddr_in     saddr;      /* build our address here */
@@ -39,9 +42,10 @@ int main(int ac, char *av[])
     bzero( (void *)&saddr, sizeof(saddr) ); /* clear out struct     */
 
     gethostname( hostname, HOSTLEN );       /* where am I ?         */
+    printf("My hostname is: %s\n", hostname);
     hp = gethostbyname( hostname );         /* get info about host  */
-    /* fill in host part    */
-    bcopy( (void *)hp->h_addr, (void *)&saddr.sin_addr, hp->h_length);
+    printf("h_name: %s\n", hp->h_name);
+    print_ip((struct sockaddr *)hp);
     saddr.sin_port = htons(PORTNUM);        /* fill in socket port  */
     saddr.sin_family = AF_INET ;            /* fill in addr family  */
 
@@ -60,11 +64,11 @@ int main(int ac, char *av[])
      */
 
     while ( 1 ){
-        struct sockaddr callerid;
-        socklen_t addelenp;
-        sock_fd = accept(sock_id, &callerid, &addelenp); /* wait for call */
-        printf("client IP len: %d\n", addelenp);
-        printf("Wow! got a call from: %s!\n", callerid.sa_data);
+        struct sockaddr caller_addr;
+        socklen_t addr_len;
+        sock_fd = accept(sock_id, &caller_addr, &addr_len); /* wait for call */
+        print_ip(&caller_addr);
+        printf("Wow! got a call!\n");
         if ( sock_fd == -1 )
         oops( "accept" );       /* error getting calls  */
 
@@ -78,4 +82,33 @@ int main(int ac, char *av[])
         fprintf( sock_fp, "%s", ctime(&thetime) );
         fclose( sock_fp );              /* release connection   */
     }
+}
+
+void print_ip(struct sockaddr *res)
+/**
+ *
+ * @ref https://stackoverflow.com/questions/1276294/getting-ipv4-address-from-a-sockaddr-structure
+ * @param addr_in
+ */
+{
+    char *s = NULL;
+    switch(res->sa_family) {
+        case AF_INET: {
+            struct sockaddr_in *addr_in = (struct sockaddr_in *)res;
+            s = malloc(INET_ADDRSTRLEN);
+            inet_ntop(AF_INET, &(addr_in->sin_addr), s, INET_ADDRSTRLEN);
+            break;
+        }
+        case AF_INET6: {
+            struct sockaddr_in6 *addr_in6 = (struct sockaddr_in6 *)res;
+            s = malloc(INET6_ADDRSTRLEN);
+            inet_ntop(AF_INET6, &(addr_in6->sin6_addr), s, INET6_ADDRSTRLEN);
+            break;
+        }
+        default:
+            printf("UNKNOWN sa_family\n");
+            break;
+    }
+    printf("IP address: %s\n", s);
+    free(s);
 }
