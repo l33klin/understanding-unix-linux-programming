@@ -61,7 +61,7 @@ int main(int ac, char *av[])
 
     while ( 1 ){
         struct sockaddr callerid;
-        struct socklen_t addelenp;
+        socklen_t addelenp;
         sock_fd = accept(sock_id, &callerid, &addelenp); /* wait for call */
         printf("Wow! got a call!\n");
         if ( sock_fd == -1 )
