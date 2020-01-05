@@ -63,7 +63,8 @@ int main(int ac, char *av[])
         struct sockaddr callerid;
         socklen_t addelenp;
         sock_fd = accept(sock_id, &callerid, &addelenp); /* wait for call */
-        printf("Wow! got a call!\n");
+        printf("client IP len: %d\n", addelenp);
+        printf("Wow! got a call from: %s!\n", callerid.sa_data);
         if ( sock_fd == -1 )
         oops( "accept" );       /* error getting calls  */
 

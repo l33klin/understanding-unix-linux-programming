@@ -203,7 +203,7 @@ file_lines (const char *filename, int fd, long int n_lines, off_t pos)
   bytes_read = pos % BUFSIZ;
   if (bytes_read == 0)
     bytes_read = BUFSIZ;
-  /* Make `pos' a multiple of `BUFSIZ' (0 if the file is short), so that all
+  /* makefile `pos' a multiple of `BUFSIZ' (0 if the file is short), so that all
      reads will be on block boundaries, which might increase efficiency.  */
   pos -= bytes_read;
   lseek (fd, pos, SEEK_SET);
@@ -918,7 +918,7 @@ main (int argc, char **argv)
 	      ++p;
 	    }
 	}
-      /* Make the options we just parsed invisible to getopt.  */
+      /* makefile the options we just parsed invisible to getopt.  */
       argv[1] = argv[0];
       argv++;
       argc--;
